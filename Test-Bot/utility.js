@@ -8,4 +8,4 @@ function embedG(message) {
 		return embed;
 }
 /* Export */
-module.exports = { delmsg, embedG, valNum };
+module.exports = { embedG };
