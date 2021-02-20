@@ -192,7 +192,7 @@ module.exports = {
                         tchannel.delete()
                     }, 30000)
                   if(!moderators[0]) {
-                    embed2.setDescription(`Thanks for opening this ticket. Hope that we could help you today! Don\'t mind opening another ticket if you have another issue\n This thread has been closed by ${collected.author.tag}`)
+                    embed2.setDescription(`Thanks for opening this ticket. Hope that we could help you today! Don\'t mind opening another ticket if you have another issue\n This thread has been closed by ${collected.first().author.tag}`)
                     message.channel.send(embed2)
                   }
                   let rating_embed = new Discord.MessageEmbed()
