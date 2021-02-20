@@ -121,4 +121,4 @@ for(const event of eventFolders) {
 	})
 }
 
-client.login(process.env.TOKEN);
+client.login('token'); // Please, if you use this public use an env file
