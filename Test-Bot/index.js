@@ -1,7 +1,21 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER', 'USER']});
-const antispam = require('better-discord-antispam');
+const AntiSpam = require('discord-anti-spam');
+const antiSpam = new AntiSpam({
+	warnThreshold: 3, 
+	muteThreshold: 4, 
+	kickThreshold: 7, 
+	banThreshold: 7, 
+	maxInterval: 2000, 
+	warnMessage: '{@user}, Please stop spamming.',
+	muteMessage: '**{user_tag}** has been muted for spamming.',
+	maxDuplicatesWarning: 7, 
+	exemptPermissions: [ 'ADMINISTRATOR'], 
+	ignoreBots: true, 
+	muteRoleName: "Muted", 
+	removeMessages: true 
+});
 const { Op } = require('sequelize');
 const { Users, Guilds, GuildCommands, modMailUsers } = require('./dbObjects');
 const currency = new Discord.Collection();
@@ -60,16 +74,6 @@ for(const folder of eventFolders) {
 /////////////////////////////////
 
 client.once('ready', async () => {
-	antispam(client, {
-		limitUntilWarn: 3, 
-        limitUntilMuted: 5,
-        interval: 2000,
-		warningMessage: '{@user}, Please stop spamming.',
-		mutedRole: "muted",
-		exemptPermissions: [ 'ADMINISTRATOR'],
-		ignoreBots: true,
-		removeMessages: true,
-	})
 	console.log(`${client.user.username} is on!`);
 	client.user.setActivity(
 		'Testing'
@@ -84,7 +88,7 @@ client.once('ready', async () => {
 
 client.on('message', async message => {
 	if(message.author.bot) return;
-	client.emit('checkMessage', message);
+	antiSpam.message(message)
 	if(message.channel.type !== 'dm') {
 		const userObject = await Users.findOne({ where: { user_id: message.author.id, guild_id: message.guild.id } });
 		const guildObject = await Guilds.findOne({ where: { guild_id: message.guild.id } });
@@ -121,4 +125,5 @@ for(const event of eventFolders) {
 		events.get(event).run(a, b, c);
 	})
 }
+
 client.login('token'); // Please, if you use this public use an env file
