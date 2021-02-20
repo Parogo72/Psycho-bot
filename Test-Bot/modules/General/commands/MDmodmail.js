@@ -5,7 +5,6 @@ const { embedG } = require('../../../utility.js');
 
 module.exports = {
     name: 'MDmodmail',
-    description: 'Remove messages from a channel',
     async execute(message, args) { 
         message.react('✅')
         const userObject = await Users.findOne({ where: { user_id: message.author.id } })
